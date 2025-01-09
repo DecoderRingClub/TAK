@@ -1,4 +1,5 @@
->**Note:** This was for a specific use case, but these are a more consolidated and straightforward instruction set for deploying a TAK Hardened Server in a Docker rootless configuration.
+
+>**Note:** This was for a specific use case, but these are a more consolidated and straightforward instruction set for deploying a TAK Hardened Server in a Docker rootless configuration. 
 
 # Rootless TAK Server Deployment
 ## Prepping the box
@@ -75,11 +76,11 @@
 ### Once file is on the server
  1. Ensure you are under the correct directory
   ```cd \takserver-docker-hardened-'version'\```
-  >**Note:** There should be \tak and \docker under the main dir.
+  >**Note:** There should be ``\tak`` and ``\docker`` under the main dir.
 ### Log into IronBank/Harbor
 1.  ```docker login registry1.dso.mil -u <username for IronBank>```
 > **Note:** The password is the CLI secret found through the web browser
->**Note:** Before building, edit the cert-metadata.sh. The default password for the CA is atakatak and must be changed. The file is under /tak/certs/
+>**Note:** Before building, edit the ``cert-metadata.sh``. The default password for the CA is ``atakatak`` and should be changed. The file is under ``/tak/certs/``
 ### Install CA for TAK server
 1. ``docker build -t ca-setup-hardened \``
 ``--build-arg ARG_CA_NAME=<CA_NAME> \``
@@ -96,7 +97,7 @@
 ``&& docker cp ca-setup-hardened:/tak/certs/files/admin.pem tak/certs/files/ \``
 ``&& docker cp ca-setup-hardened:/tak/certs/files/config-takserver.cfg tak/certs/files/``
 ### Installing the TAK DB
-> **Note:** Ensure you edit the CoreConfig file under /tak and update the <connection-url> tag with the hardened TAK Database container name, and the DB password.
+> **Note:** Ensure you edit the CoreConfig file under /tak and update the <connection-url> tag with the hardened TAK Database container name and the DB password.
 > **Note:** Also, change the keystore and truststore passwords
 >
 > **Example:**``<connection url="jdbc:postgresql://tak-database-hardened-<version>:5432/cot" username="martiuser" password="<changeme>" />``
@@ -123,6 +124,12 @@
 ### Gather Certs and push admin certs
 1. ``docker exec -it ca-setup-hardened bash -c "openssl x509 -noout -fingerprint -md5 -inform pem -in files/admin.pem | grep -oP 'MD5 Fingerprint=\K.*'"``
 2. ``docker exec -it takserver-hardened-"$(cat tak/version.txt)" bash -c 'java -jar /opt/tak/utils/UserManager.jar usermod -A -f <admin fingerprint> admin'``
+
+### Connecting to the TAK Server
+1. First, you’ll need to pull off the host a few certs, namely, the .p12 files for the admin user you just created and the ``trust store-root.p12``. (The truststore-root will be needed to connect clients i.e., WinTAK, ATAK, etc)
+2. Once you have them on your local system, how you import them depends on your specific browser but generally involves uploading them under your security settings.
+3. Navigate to ``https://<IP Address>:8443/`` for the dashboard. You’ll see the normal security warnings for using a self-signed cert. Ensure you finish setting set up the server under ``https://<IP Address>:8443/setup``.
+
 ### Helpful commands
 1. ``docker exec -u root -it <id> sh``
 2. ``./makeCert.sh client admin``
