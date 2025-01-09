@@ -1,0 +1,16 @@
+## WinTAK Deployment
+>**Note:** This again was for a specific deployment, but hopefully these notes will act as a guide if you want to try out these powerful tools.
+
+### Install WinTAK
+1. You will likely be using WinTAK CIV (MIL if you have the right need), which can be easily located online and is provided free. 
+
+>**Note:** Other flavors of TAK are in the wild, such as ATAK (Android) and iTAK (Apple). iTAK was a second thought since most DoD users operate with ATAK, and thus, iTAK is missing many functions.
+
+2. Once you've installed WinTAK, navigate to the three dashes in the top left corner and select settings.
+3. Select ``Network Preferrences``
+4. Select ``Manage Server Connections``
+5. If you followed my previous instruction set, you'll be setting this up with SSL, so select it. You should see more options now.
+6. Enter your IP address for the TAK server and enter the port ``8089`` unless changed.
+7. Click the top button to select your truststore cert (should be ``truststore-root.p12``) and enter the password for the cert.
+8. Next, click the button below to select your client cert (should be ``admin.p12 or user.p12``) and again, enter the password.
+9. Hit okay in the bottom.
